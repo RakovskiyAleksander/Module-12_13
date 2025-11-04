@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class MazeGenerator
 {
-    public MazeCell[,] GenerateMaze(int sizeX, int sizeY)
+    public Maze GenerateMaze(int sizeX, int sizeY)
     {
         Maze maze = new Maze(sizeX, sizeY);
 
@@ -17,7 +17,7 @@ public class MazeGenerator
 
         RemoveWallsWithBacktracker(maze.Cells);
 
-        return maze.Cells;
+        return maze;
     }
 
     private void RemoveWallsWithBacktracker(MazeCell[,] maze)
@@ -66,26 +66,26 @@ public class MazeGenerator
         {
             if (current.PositionZ < chosen.PositionZ)
             {
-                current.WallFirst = false;
-                chosen.WallThird = false;
+                current.IsthmusUp = true;
+                chosen.IsthmusDown = true;
             }
             else
             {
-                current.WallThird = false;
-                chosen.WallFirst = false;
+                current.IsthmusDown = true;
+                chosen.IsthmusUp = true;
             }
         }
         else
         {
             if (current.PositionX < chosen.PositionX)
             {
-                current.WallSecond = false;
-                chosen.WallFourth = false;
+                current.IsthmusRigth = true;
+                chosen.IsthmusLeft = true;
             }
             else
             {
-                current.WallFourth = false;
-                chosen.WallSecond = false;
+                current.IsthmusLeft = true;
+                chosen.IsthmusRigth = true;
             }
         }
         current.AmountWall--;
