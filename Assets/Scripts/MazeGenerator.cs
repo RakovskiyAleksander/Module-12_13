@@ -41,7 +41,7 @@ public class MazeGenerator
             if (unvisitedNeighbours.Count > 0)
             {
                 MazeCell chosen = unvisitedNeighbours[Random.Range(0, unvisitedNeighbours.Count)];
-                RemoveWall(current, chosen);
+                AddSegmen(current, chosen);
 
                 chosen.Visited = true;
                 stack.Push(chosen);
@@ -60,35 +60,36 @@ public class MazeGenerator
 
     }
 
-    private void RemoveWall(MazeCell current, MazeCell chosen)
+    private void AddSegmen(MazeCell current, MazeCell chosen)
     {
         if (current.PositionX == chosen.PositionX)
         {
             if (current.PositionZ < chosen.PositionZ)
             {
-                current.IsthmusUp = true;
-                chosen.IsthmusDown = true;
+                current.SegmentRigth = true;
+                chosen.SegmentLeft = true;
             }
             else
             {
-                current.IsthmusDown = true;
-                chosen.IsthmusUp = true;
+                current.SegmentLeft = true;
+                chosen.SegmentRigth = true;
             }
         }
         else
         {
             if (current.PositionX < chosen.PositionX)
             {
-                current.IsthmusRigth = true;
-                chosen.IsthmusLeft = true;
+                current.SegmentDown = true;
+                chosen.SegmentUp = true;
             }
             else
             {
-                current.IsthmusLeft = true;
-                chosen.IsthmusRigth = true;
+                current.SegmentUp = true;
+                chosen.SegmentDown = true;
             }
         }
-        current.AmountWall--;
-        chosen.AmountWall--;
+
+        current.AmountSegments++;
+        chosen.AmountSegments++;
     }
 }
