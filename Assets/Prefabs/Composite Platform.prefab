@@ -50,9 +50,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _segmentUp: {fileID: 2195441668479448363}
+  _segmentRight: {fileID: 2754747924413301588}
   _segmentDown: {fileID: 2248571435333803007}
   _segmentLeft: {fileID: 69779452437623538}
-  _segmentRight: {fileID: 2754747924413301588}
 --- !u!1001 &241418631121808290
 PrefabInstance:
   m_ObjectHideFlags: 0

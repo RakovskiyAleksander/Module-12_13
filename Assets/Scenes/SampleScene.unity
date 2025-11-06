@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 827725cd107867840847a69be508fe25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MazeSizeX: 3
-  MazeSizeY: 3
+  MazeSizeX: 10
+  MazeSizeY: 10
   _mazeSpawner: {fileID: 1219501429}
 --- !u!4 &708264846
 Transform:
@@ -320,6 +320,8 @@ MonoBehaviour:
   _mazeCellWidthX: 6
   _mazecellWidthZ: 6
   _platformPrefab: {fileID: 2592844663644705986, guid: fd368625bd5332f42ae9bd5c1fb7559b,
+    type: 3}
+  _coinPrefab: {fileID: 2919337901321185357, guid: d359ad3cf22d2404a9848c8d3293abb1,
     type: 3}
 --- !u!4 &1219501430
 Transform:

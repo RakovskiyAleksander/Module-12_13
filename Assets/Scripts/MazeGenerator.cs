@@ -22,8 +22,8 @@ public class MazeGenerator
 
     private void RemoveWallsWithBacktracker(MazeCell[,] maze)
     {
-        MazeCell current = maze[0, 0];
-        MazeCell finishCell = maze[0, 0];
+        MazeCell startCell = maze[5, 5];
+        MazeCell current = startCell;
         current.Visited = true;
 
         Stack<MazeCell> stack = new Stack<MazeCell>();
@@ -50,14 +50,11 @@ public class MazeGenerator
             }
             else
             {
-                if (current.StackCount > finishCell.StackCount) finishCell = current;
+                if (current.StackCount > startCell.StackCount) startCell = current;
                 current = stack.Pop();
-
             }
 
         } while (stack.Count > 0);
-        finishCell.IsFinishCell = true;
-
     }
 
     private void AddSegmen(MazeCell current, MazeCell chosen)
@@ -66,30 +63,30 @@ public class MazeGenerator
         {
             if (current.PositionZ < chosen.PositionZ)
             {
-                current.SegmentRigth = true;
-                chosen.SegmentLeft = true;
+                current.SegmentRightIsActive = true;
+                chosen.SegmentLeftIsActive = true;
             }
             else
             {
-                current.SegmentLeft = true;
-                chosen.SegmentRigth = true;
+                current.SegmentLeftIsActive = true;
+                chosen.SegmentRightIsActive = true;
             }
         }
         else
         {
             if (current.PositionX < chosen.PositionX)
             {
-                current.SegmentDown = true;
-                chosen.SegmentUp = true;
+                current.SegmentDownIsActive = true;
+                chosen.SegmentUpIsActive = true;
             }
             else
             {
-                current.SegmentUp = true;
-                chosen.SegmentDown = true;
+                current.SegmentUpIsActive = true;
+                chosen.SegmentDownIsActive = true;
             }
         }
 
-        current.AmountSegments++;
-        chosen.AmountSegments++;
+        current.AmountSideSegments++;
+        chosen.AmountSideSegments++;
     }
 }
