@@ -3,8 +3,14 @@ using UnityEngine;
 
 public class MazeGenerator
 {
-    public Maze GenerateMaze(int sizeX, int sizeY)
+    private int _startPointX;
+    private int _startPointZ;
+
+    public Maze GenerateMaze(int sizeX, int sizeY, int startPointX,int startPointZ)
     {
+        _startPointX = startPointX;
+        _startPointZ = startPointZ;
+
         Maze maze = new Maze(sizeX, sizeY);
 
         for (int x = 0; x < maze.Cells.GetLength(0); x++)
@@ -15,14 +21,15 @@ public class MazeGenerator
             }
         }
 
-        RemoveWallsWithBacktracker(maze.Cells);
+        AddSegmentWithBacktracker(maze.Cells);
 
         return maze;
     }
 
-    private void RemoveWallsWithBacktracker(MazeCell[,] maze)
+    private void AddSegmentWithBacktracker(MazeCell[,] maze)
     {
-        MazeCell startCell = maze[5, 5];
+        MazeCell startCell = maze[_startPointX, _startPointZ];
+        startCell.IsStartCell = true;
         MazeCell current = startCell;
         current.Visited = true;
 
@@ -41,7 +48,7 @@ public class MazeGenerator
             if (unvisitedNeighbours.Count > 0)
             {
                 MazeCell chosen = unvisitedNeighbours[Random.Range(0, unvisitedNeighbours.Count)];
-                AddSegmen(current, chosen);
+                AddSegment(current, chosen);
 
                 chosen.Visited = true;
                 stack.Push(chosen);
@@ -57,7 +64,7 @@ public class MazeGenerator
         } while (stack.Count > 0);
     }
 
-    private void AddSegmen(MazeCell current, MazeCell chosen)
+    private void AddSegment(MazeCell current, MazeCell chosen)
     {
         if (current.PositionX == chosen.PositionX)
         {

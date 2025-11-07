@@ -8,6 +8,7 @@ public class MazeCell
     public bool SegmentDownIsActive = false;
     public bool SegmentLeftIsActive = false;
 
+    public bool IsStartCell = false;
     public bool Visited = false;
     public int StackCount;
     public int AmountSideSegments = 0;
