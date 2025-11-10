@@ -12,9 +12,18 @@ public class Game : MonoBehaviour
     [Space(10)]
     [Header("Player settings")]
     [SerializeField] private GameObject _playerPrefab;
-    [SerializeField] private Vector3 _playerStartPosition;
+    [SerializeField] private float _playerStartPositionY;
     [SerializeField] private float _playerSpeed;
     [SerializeField] private float _playerRotationSpeed;
+
+    [Space(10)]
+    [Header("Camera settings")]
+    [SerializeField] private CameraFollow _camera;
+    [SerializeField] private float _cameraSpeedFollow;
+    [SerializeField] private float _cameraSpeedFollowRotation;
+
+    private GameObject _player;
+    private Vector3 _playerStartPosition;
 
     private int _mazeSizeXDefault = 2;
     private int _mazeSizeZDefault = 2;
@@ -61,7 +70,15 @@ public class Game : MonoBehaviour
     private void Awake()
     {
         int coinAmount;
-        _mazeSpawner.SpawnMaze(MazeSizeX, MazeSizeZ, StartPointX - 1, StartPointZ - 1, out coinAmount);
+        _mazeSpawner.SpawnMaze(MazeSizeX, MazeSizeZ, StartPointX - 1, StartPointZ - 1, out coinAmount, out _playerStartPosition);
+        _playerStartPosition = new Vector3(_playerStartPosition.x, _playerStartPosition.y + _playerStartPositionY, _playerStartPosition.z);
+        _player = AddGameObjectToScene(_playerPrefab, _playerStartPosition);
+        _player.GetComponent<Player>().Initialize(_playerSpeed,_playerRotationSpeed);
+
+        _camera.Initialize(_player, _cameraSpeedFollowRotation, _cameraSpeedFollow);
+
+
+
     }
 
     public GameObject AddGameObjectToScene(GameObject gameObject, Vector3 startPoint)

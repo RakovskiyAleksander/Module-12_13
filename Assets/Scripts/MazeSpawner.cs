@@ -9,11 +9,13 @@ public class MazeSpawner : MonoBehaviour
     [SerializeField] float _coinHeightGeneration;
 
 
-    public void SpawnMaze(int sizeX, int sizeY, int startPointX, int startPointZ, out int coinAmount)
+    public void SpawnMaze(int sizeX, int sizeY, int startPointX, int startPointZ, out int coinAmount, out Vector3 PlayerStartPosition)
     {
         MazeGenerator generator = new MazeGenerator();
         Maze maze = generator.GenerateMaze(sizeX, sizeY, startPointX, startPointZ);
+
         int coinAmountTemp = 0;
+        PlayerStartPosition = new Vector3(startPointX * _intervalBetweenCellsX, 0, startPointZ * _intervalBetweenCellsZ);
 
         for (int x = 0; x < maze.Cells.GetLength(0); x++)
         {
