@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.1281772, g: 0.0688124, b: 0.044050127, a: 1}
+  m_IndirectSpecularColor: {r: 0.12796573, g: 0.06875746, b: 0.044040266, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -197,19 +197,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 827725cd107867840847a69be508fe25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mazeSizeX: 5
-  _mazeSizeZ: 5
-  _startPointX: 3
-  _startPointZ: 3
+  _mazeSizeX: 7
+  _mazeSizeZ: 7
+  _startPointX: 4
+  _startPointZ: 4
   _mazeSpawner: {fileID: 1219501429}
   _playerPrefab: {fileID: 2419007228761172942, guid: e6b0dce0347c2654592ebcd825d12015,
     type: 3}
   _playerStartPositionY: 2
-  _playerSpeed: 25
+  _playerSpeed: 20
   _playerRotationSpeed: 1.5
+  _playerJumpForce: 5
+  _minDistanceGroundJump: 0.2
+  _deadlyHeight: -1
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
   _camera: {fileID: 201047117}
   _cameraSpeedFollow: 3
   _cameraSpeedFollowRotation: 3
+  _timeForLose: 10
 --- !u!4 &708264846
 Transform:
   m_ObjectHideFlags: 0
