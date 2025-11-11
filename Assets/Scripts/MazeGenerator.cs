@@ -6,7 +6,7 @@ public class MazeGenerator
     private int _startPointX;
     private int _startPointZ;
 
-    public Maze GenerateMaze(int sizeX, int sizeY, int startPointX,int startPointZ)
+    public Maze GenerateMaze(int sizeX, int sizeY, int startPointX, int startPointZ)
     {
         _startPointX = startPointX;
         _startPointZ = startPointZ;

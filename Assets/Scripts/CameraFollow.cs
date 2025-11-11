@@ -16,7 +16,7 @@ public class CameraFollow : MonoBehaviour
 
     void LateUpdate()
     {
-        _directionMovement = _target.GetComponent<Player>().DirectionMovement;
+        _directionMovement = _target.GetComponent<PlayerBehaviour>().DirectionMovement;
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(_directionMovement), _cameraSpeedFollowRotation * Time.fixedDeltaTime);
         transform.position = Vector3.Lerp(transform.position, _target.transform.position, _cameraSpeedFollow * Time.deltaTime);
     }

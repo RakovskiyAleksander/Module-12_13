@@ -6,8 +6,8 @@ public class Game : MonoBehaviour
     [Header("Maze Setup")]
     [SerializeField] private int _mazeSizeX;
     [SerializeField] private int _mazeSizeZ;
-    [SerializeField] private int _startPointX;
-    [SerializeField] private int _startPointZ;
+    [SerializeField] private int _startCellX;
+    [SerializeField] private int _startCellZ;
     [SerializeField] private MazeSpawner _mazeSpawner;
 
     [Space(10)]
@@ -32,8 +32,7 @@ public class Game : MonoBehaviour
     [SerializeField] float _timeForLose;
 
     private GameObject _player;
-    private Player _playerComponent;
-    private Vector3 _playerStartPosition;
+    private PlayerBehaviour _playerBehaviour;
 
     private int _mazeSizeXDefault = 2;
     private int _mazeSizeZDefault = 2;
@@ -41,6 +40,7 @@ public class Game : MonoBehaviour
     private int _startPointXDefault = 1;
     private int _startPointZDefault = 1;
 
+    private CoinCollector _coinCollector;
     private CountdownTimer _timerForLose;
 
     private int MazeSizeX
@@ -65,8 +65,8 @@ public class Game : MonoBehaviour
     {
         get
         {
-            if (_startPointX < _startPointXDefault || _startPointX > MazeSizeX) return _startPointXDefault;
-            return _startPointX;
+            if (_startCellX < _startPointXDefault || _startCellX > MazeSizeX) return _startPointXDefault;
+            return _startCellX;
         }
     }
 
@@ -74,19 +74,23 @@ public class Game : MonoBehaviour
     {
         get
         {
-            if (_startPointZ < _startPointZDefault || _startPointZ > MazeSizeZ) return _startPointZDefault;
-            return _startPointZ;
+            if (_startCellZ < _startPointZDefault || _startCellZ > MazeSizeZ) return _startPointZDefault;
+            return _startCellZ;
         }
     }
 
     private void Awake()
     {
-        int coinAmount;
-        _mazeSpawner.SpawnMaze(MazeSizeX, MazeSizeZ, StartPointX - 1, StartPointZ - 1, out coinAmount, out _playerStartPosition);
-        _playerStartPosition = new Vector3(_playerStartPosition.x, _playerStartPosition.y + _playerStartPositionY, _playerStartPosition.z);
-        _player = AddGameObjectToScene(_playerPrefab, _playerStartPosition);
-        _playerComponent = _player.GetComponent<Player>();
-        _playerComponent.Initialize(_playerSpeed, _playerRotationSpeed, _playerJumpForce, _minDistanceGroundJump, _deadlyHeight, _groundLayer);
+        int coinAmountInLevel;
+        Vector3 playerStartPosition;
+        _mazeSpawner.SpawnMaze(MazeSizeX, MazeSizeZ, StartPointX - 1, StartPointZ - 1, out coinAmountInLevel, out playerStartPosition);
+
+        _coinCollector = new CoinCollector(coinAmountInLevel);
+
+        playerStartPosition = new Vector3(playerStartPosition.x, playerStartPosition.y + _playerStartPositionY, playerStartPosition.z);
+        _player = AddGameObjectToScene(_playerPrefab, playerStartPosition);
+        _playerBehaviour = _player.GetComponent<PlayerBehaviour>();
+        _playerBehaviour.Initialize(_playerSpeed, _playerRotationSpeed, _playerJumpForce, _minDistanceGroundJump, _deadlyHeight, _groundLayer, _coinCollector);
 
         _camera.Initialize(_player, _cameraSpeedFollowRotation, _cameraSpeedFollow);
 
@@ -101,24 +105,42 @@ public class Game : MonoBehaviour
     void OnGUI()
     {
 
-        if (_timerForLose.IsTicking) GUI.Box(new Rect(40, 40, 250, 25), "Осталось " + _timerForLose.TimeLeft + " сек!");
+        if (_timerForLose.IsTicking)
+        {
+            GUI.Box(new Rect(40, 40, 250, 25), "Время закончится через " + _timerForLose.TimeLeft + " сек!");
+            GUI.Box(new Rect(40, 80, 250, 25), "Осталось собрать " + _coinCollector.CoinsLeft + " монет.");
+        }
 
-        if (_timerForLose.TimeIsOver || _playerComponent.IsAlive == false)
+        if (_timerForLose.TimeIsOver || _playerBehaviour.IsAlive == false)
         {
             GamePause();
             GameLose();
+        }
+
+        if (_coinCollector.IsFull)
+        {
+            GamePause();
+            GameWin();
         }
     }
 
     private void GamePause()
     {
-        _playerComponent.Immobilize();
+        _playerBehaviour.Immobilize();
         _timerForLose.Pause();
     }
 
     private void GameLose()
     {
         if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200, 100), "!!! ТЫ ПРОИГРАЛ !!!"))
+        {
+            SceneManager.LoadScene(0);
+        }
+    }
+
+    private void GameWin()
+    {
+        if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200, 100), "!!! ТЫ ВЫИГРАЛ !!!"))
         {
             SceneManager.LoadScene(0);
         }

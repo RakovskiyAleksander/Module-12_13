@@ -1,16 +1,16 @@
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class PlayerBehaviour : MonoBehaviour
 {
     public Vector3 DirectionMovement { get; private set; }
 
     private float _playerSpeed;
     private float _playerRotationSpeed;
     private float _playerJumpForce;
-
     private float _minDistaceGroundJump;
     private float _deadlyHeight;
     private LayerMask _groundLayer;
+    private CoinCollector _coinCollector;
 
     private Mover _playerMover;
     private Collider _playerCollider;
@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
 
     public bool IsAlive { get; private set; }
 
-    public void Initialize(float speed, float rotationSpeed, float jumpForse, float minDistaceGroundJump, float deadlyHeight, LayerMask groundLayer)
+    public void Initialize(float speed, float rotationSpeed, float jumpForse, float minDistaceGroundJump, float deadlyHeight, LayerMask groundLayer, CoinCollector coinCollector)
     {
         _isActive = true;
         IsAlive = true;
@@ -34,6 +34,7 @@ public class Player : MonoBehaviour
         _deadlyHeight = deadlyHeight;
         _minDistaceGroundJump = minDistaceGroundJump;
         _groundLayer = groundLayer;
+        _coinCollector = coinCollector;
 
         _playerMover = new Mover(GetComponent<Rigidbody>(), _playerSpeed, _playerRotationSpeed, _playerJumpForce);
         _playerCollider = GetComponent<Collider>();
@@ -76,6 +77,15 @@ public class Player : MonoBehaviour
                 _playerMover.Jump();
                 _isJump = false;
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.TryGetComponent<CoinBehaviour>(out CoinBehaviour coinBehaviour))
+        {
+            _coinCollector.AddCoin();
+            coinBehaviour.MakeInactive();
         }
     }
 

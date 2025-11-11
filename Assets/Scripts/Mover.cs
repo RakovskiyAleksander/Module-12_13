@@ -30,5 +30,4 @@ public class Mover
     {
         _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
     }
-
 }
