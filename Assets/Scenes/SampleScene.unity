@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.15781221, g: 0.084799334, b: 0.054315224, a: 1}
+  m_IndirectSpecularColor: {r: 0.15807286, g: 0.084867306, b: 0.054327384, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -208,7 +208,7 @@ MonoBehaviour:
   _playerSpeed: 400
   _playerRotationSpeed: 1.7
   _playerJumpForce: 5
-  _minDistanceGroundJump: 0.2
+  _minDistanceGroundJump: 0.1
   _deadlyHeight: -1
   _groundLayer:
     serializedVersion: 2

@@ -10,12 +10,13 @@ public class Player : MonoBehaviour
     private float _minDistaceGroundJump;
     private float _deadlyHeight;
     private LayerMask _groundLayer;
-    private Wallet _wallet;
 
     private Mover _playerMover;
     private Collider _playerCollider;
 
     private CoinCollector _coinCollector;
+
+    private GroundChecker _groundChecker;
 
     private float _vInput;
     private float _hInput;
@@ -36,15 +37,16 @@ public class Player : MonoBehaviour
         _deadlyHeight = movementSettings.DeadlyHeight;
         _minDistaceGroundJump = movementSettings.MinDistaceGroundJump;
         _groundLayer = movementSettings.GroundLayer;
-        _wallet = wallet;
 
-        _playerMover = new Mover(GetComponent<Rigidbody>(), _playerSpeed, _playerRotationSpeed, _playerJumpForce);
+        _playerMover = new Mover(GetComponent<Rigidbody>(), _playerSpeed, _playerJumpForce);
         _playerCollider = GetComponent<Collider>();
 
         if (TryGetComponent<CoinCollector>(out _coinCollector))
         {
-            _coinCollector.Initialize();
+            _coinCollector.Initialize(wallet);
         }
+
+        _groundChecker = new GroundChecker(_playerCollider, _minDistaceGroundJump, _groundLayer);
 
         DirectionMovement = Vector3.forward;
     }
@@ -60,7 +62,7 @@ public class Player : MonoBehaviour
         _vInput = Input.GetAxisRaw("Vertical");
         _hInput = Input.GetAxisRaw("Horizontal");
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && _groundChecker.CheckGround())
         {
             _isJump = true;
         }
@@ -75,38 +77,18 @@ public class Player : MonoBehaviour
     {
         if (_isActive)
         {
-            if (_hInput != 0)
-            {
-                DirectionMovement = _playerMover.RotateDirectionMovement(_hInput, DirectionMovement);
-            }
+            DirectionMovement = new VectorRotate().RotateAroundAxiseY(_hInput * _playerRotationSpeed, DirectionMovement);
 
-            if (_vInput != 0 && IsGrounded())
+            if (_vInput != 0 && _groundChecker.CheckGround())
             {
                 _playerMover.Move(_vInput, DirectionMovement);
             }
 
-            if (_isJump && IsGrounded())
+            if (_isJump && _groundChecker.CheckGround())
             {
                 _playerMover.Jump();
                 _isJump = false;
             }
         }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.TryGetComponent<Coin>(out Coin coinBehaviour))
-        {
-            _wallet.AddCoin();
-            coinBehaviour.Collect();
-        }
-    }
-
-    private bool IsGrounded()
-    {
-        Vector3 playerColliderBottom = new Vector3(_playerCollider.bounds.center.x, _playerCollider.bounds.min.y, _playerCollider.bounds.center.z);
-        bool grounded = Physics.CheckSphere(playerColliderBottom, _minDistaceGroundJump, _groundLayer, QueryTriggerInteraction.Ignore);
-
-        return grounded;
     }
 }
