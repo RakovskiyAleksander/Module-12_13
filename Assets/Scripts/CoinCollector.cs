@@ -1,22 +1,20 @@
-public class CoinCollector
+using UnityEngine;
+
+public class CoinCollector : MonoBehaviour
 {
-    private int _maxCoinsAmount;
-    private int _coinsAmount;
 
-    public bool IsFull { get; private set; }
-    public int CoinsLeft => (_maxCoinsAmount - _coinsAmount);
-
-    public CoinCollector(int maxCoinAmount)
+    public void Initialize()
     {
-        _maxCoinsAmount = maxCoinAmount;
-        _coinsAmount = 0;
-        IsFull = false;
+
     }
 
-    public void AddCoin()
+    void Start()
     {
-        _coinsAmount++;
 
-        if (_coinsAmount == _maxCoinsAmount) IsFull = true;
+    }
+
+    void Update()
+    {
+
     }
 }

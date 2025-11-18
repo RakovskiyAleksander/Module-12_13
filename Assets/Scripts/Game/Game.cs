@@ -32,7 +32,7 @@ public class Game : MonoBehaviour
     [SerializeField] float _timeForLose;
 
     private GameObject _player;
-    private PlayerBehaviour _playerBehaviour;
+    private Player _playerComponent;
 
     private int _mazeSizeXDefault = 2;
     private int _mazeSizeZDefault = 2;
@@ -40,7 +40,7 @@ public class Game : MonoBehaviour
     private int _startPointXDefault = 1;
     private int _startPointZDefault = 1;
 
-    private CoinCollector _coinCollector;
+    private Wallet _wallet;
     private CountdownTimer _timerForLose;
 
     private int MazeSizeX
@@ -85,12 +85,13 @@ public class Game : MonoBehaviour
         Vector3 playerStartPosition;
         _mazeSpawner.SpawnMaze(MazeSizeX, MazeSizeZ, StartPointX - 1, StartPointZ - 1, out coinAmountInLevel, out playerStartPosition);
 
-        _coinCollector = new CoinCollector(coinAmountInLevel);
+        _wallet = new Wallet(coinAmountInLevel);
 
         playerStartPosition = new Vector3(playerStartPosition.x, playerStartPosition.y + _playerStartPositionY, playerStartPosition.z);
         _player = AddGameObjectToScene(_playerPrefab, playerStartPosition);
-        _playerBehaviour = _player.GetComponent<PlayerBehaviour>();
-        _playerBehaviour.Initialize(_playerSpeed, _playerRotationSpeed, _playerJumpForce, _minDistanceGroundJump, _deadlyHeight, _groundLayer, _coinCollector);
+        _playerComponent = _player.GetComponent<Player>();
+        MovementSettings movementSettings = new MovementSettings(_playerSpeed, _playerRotationSpeed, _playerJumpForce, _minDistanceGroundJump, _deadlyHeight, _groundLayer);
+        _playerComponent.Initialize(movementSettings, _wallet);
 
         _camera.Initialize(_player, _cameraSpeedFollowRotation, _cameraSpeedFollow);
 
@@ -108,16 +109,16 @@ public class Game : MonoBehaviour
         if (_timerForLose.IsTicking)
         {
             GUI.Box(new Rect(40, 40, 250, 25), "Время закончится через " + _timerForLose.TimeLeft + " сек!");
-            GUI.Box(new Rect(40, 80, 250, 25), "Осталось собрать " + _coinCollector.CoinsLeft + " монет.");
+            GUI.Box(new Rect(40, 80, 250, 25), "Осталось собрать " + _wallet.CoinsLeft + " монет.");
         }
 
-        if (_timerForLose.TimeIsOver || _playerBehaviour.IsAlive == false)
+        if (_timerForLose.TimeIsOver || _playerComponent.IsAlive == false)
         {
             GamePause();
             GameLose();
         }
 
-        if (_coinCollector.IsFull)
+        if (_wallet.IsFull)
         {
             GamePause();
             GameWin();
@@ -126,7 +127,7 @@ public class Game : MonoBehaviour
 
     private void GamePause()
     {
-        _playerBehaviour.Immobilize();
+        _playerComponent.Immobilize();
         _timerForLose.Pause();
     }
 

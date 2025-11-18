@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerBehaviour : MonoBehaviour
+public class Player : MonoBehaviour
 {
     public Vector3 DirectionMovement { get; private set; }
 
@@ -10,10 +10,12 @@ public class PlayerBehaviour : MonoBehaviour
     private float _minDistaceGroundJump;
     private float _deadlyHeight;
     private LayerMask _groundLayer;
-    private CoinCollector _coinCollector;
+    private Wallet _wallet;
 
     private Mover _playerMover;
     private Collider _playerCollider;
+
+    private CoinCollector _coinCollector;
 
     private float _vInput;
     private float _hInput;
@@ -23,29 +25,40 @@ public class PlayerBehaviour : MonoBehaviour
 
     public bool IsAlive { get; private set; }
 
-    public void Initialize(float speed, float rotationSpeed, float jumpForse, float minDistaceGroundJump, float deadlyHeight, LayerMask groundLayer, CoinCollector coinCollector)
+    public void Initialize(MovementSettings movementSettings, Wallet wallet)
     {
         _isActive = true;
         IsAlive = true;
 
-        _playerSpeed = speed;
-        _playerRotationSpeed = rotationSpeed;
-        _playerJumpForce = jumpForse;
-        _deadlyHeight = deadlyHeight;
-        _minDistaceGroundJump = minDistaceGroundJump;
-        _groundLayer = groundLayer;
-        _coinCollector = coinCollector;
+        _playerSpeed = movementSettings.Speed;
+        _playerRotationSpeed = movementSettings.RotationSpeed;
+        _playerJumpForce = movementSettings.JumpForse;
+        _deadlyHeight = movementSettings.DeadlyHeight;
+        _minDistaceGroundJump = movementSettings.MinDistaceGroundJump;
+        _groundLayer = movementSettings.GroundLayer;
+        _wallet = wallet;
 
         _playerMover = new Mover(GetComponent<Rigidbody>(), _playerSpeed, _playerRotationSpeed, _playerJumpForce);
         _playerCollider = GetComponent<Collider>();
 
+        if (TryGetComponent<CoinCollector>(out _coinCollector))
+        {
+            _coinCollector.Initialize();
+        }
+
         DirectionMovement = Vector3.forward;
     }
 
-    public void Update()
+    public void Immobilize()
     {
-        _vInput = Input.GetAxisRaw("Vertical") * _playerSpeed;
-        _hInput = Input.GetAxisRaw("Horizontal") * _playerRotationSpeed;
+        _isActive = false;
+        GetComponent<Rigidbody>().isKinematic = true;
+    }
+
+    private void Update()
+    {
+        _vInput = Input.GetAxisRaw("Vertical");
+        _hInput = Input.GetAxisRaw("Horizontal");
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -58,7 +71,7 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
-    public void FixedUpdate()
+    private void FixedUpdate()
     {
         if (_isActive)
         {
@@ -82,10 +95,10 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent<CoinBehaviour>(out CoinBehaviour coinBehaviour))
+        if (other.gameObject.TryGetComponent<Coin>(out Coin coinBehaviour))
         {
-            _coinCollector.AddCoin();
-            coinBehaviour.MakeInactive();
+            _wallet.AddCoin();
+            coinBehaviour.Collect();
         }
     }
 
@@ -95,11 +108,5 @@ public class PlayerBehaviour : MonoBehaviour
         bool grounded = Physics.CheckSphere(playerColliderBottom, _minDistaceGroundJump, _groundLayer, QueryTriggerInteraction.Ignore);
 
         return grounded;
-    }
-
-    public void Immobilize()
-    {
-        _isActive = false;
-        GetComponent<Rigidbody>().isKinematic = true;
     }
 }

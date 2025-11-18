@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 386273961696557489}
-  - component: {fileID: -955839284810391975}
   - component: {fileID: -3553049306270849147}
+  - component: {fileID: 7348056241142808805}
   - component: {fileID: 8913973184070025775}
   m_Layer: 0
   m_Name: Coin
@@ -35,18 +35,6 @@ Transform:
   - {fileID: 6257318473020187698}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 181.35, z: 0}
---- !u!114 &-955839284810391975
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2919337901321185357}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3933e156c317a344b93c0d377aa392da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!95 &-3553049306270849147
 Animator:
   serializedVersion: 5
@@ -68,6 +56,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7348056241142808805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2919337901321185357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d9e2d64017b11d44bc9bd3732c1238a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!135 &8913973184070025775
 SphereCollider:
   m_ObjectHideFlags: 0
